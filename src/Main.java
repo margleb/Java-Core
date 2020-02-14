@@ -1,6 +1,19 @@
+/*
+ Соглашение о Java-коде
+ https://www.oracle.com/technetwork/java/codeconventions-150003.pdf
+
+ 1. Интерфейсы должны быть прилагательными
+ 2. Классы существительные обозночающие какой-либо обьект и с пишутся с большой буквы
+ 3. Переменная может состять из нескольких слов, каждое новое слово с большой буквы
+ 4. Нельзя называть индентификаторы зарезервироваными словами
+ 5. Название метода глагол + существительное с большой буквы
+
+*/
+
 public class Main {
+    int camelCase;
+
     public static void main(String[] args) {
-        Person person  = new Person();
-        System.out.println(person.getName());
+
     }
 }
