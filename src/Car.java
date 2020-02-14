@@ -1,6 +1,8 @@
 public class Car {
-    int maxSpeed = 240;
-    int getMaxSpeed() {
-        return maxSpeed;
+   public void driving() {
+        System.out.println("driving");
+   }
+    public int getNumOfSeats() {
+        return 4;
     }
 }
