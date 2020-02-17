@@ -1,20 +1,27 @@
 public class Main extends Object {
+
+    enum Days { MONDAY, THUSDAY, WENSDAY }
+
     public static void main(String[] args) {
-        int a = 6;
-        int b = 8;
-        int c = 6;
-        int d = 3;
-
-        if(a > b) {
-            System.out.println("a > b");
-        } else if(a == b) {
-            System.out.println("a == b");
-        } else  {
-            System.out.println("a < b");
+        // можно передать примитивы, строки или enum
+        // без оператора break выведутся другие кейсы после условия
+        // дефолт не обязательно должен быть последним
+        int a = 1;
+        String str = "string";
+        Days thusday = Days.THUSDAY;
+        switch(thusday) {
+            case MONDAY:
+                System.out.println(Days.MONDAY);
+                // break;
+            case THUSDAY:
+                System.out.println(Days.THUSDAY);
+                // break;
+            case WENSDAY:
+                System.out.println(Days.WENSDAY);
+                // break;
+            default:
+                System.out.println("No idea!");
+                // break;
         }
-
-        if(a > b)
-            if(c < d)
-            System.out.println("a > b");
     }
 }
