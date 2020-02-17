@@ -1,9 +1,20 @@
 public class Main extends Object {
-    // используется для передачи параметров через консоль
-    // можно также передавать параметры через IDE, (конфигурации Main)
     public static void main(String[] args) {
-        for(String s : args) {
-            System.out.println(s);
+        int a = 6;
+        int b = 8;
+        int c = 6;
+        int d = 3;
+
+        if(a > b) {
+            System.out.println("a > b");
+        } else if(a == b) {
+            System.out.println("a == b");
+        } else  {
+            System.out.println("a < b");
         }
+
+        if(a > b)
+            if(c < d)
+            System.out.println("a > b");
     }
 }
