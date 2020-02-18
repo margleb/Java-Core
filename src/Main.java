@@ -1,65 +1,39 @@
+/* Cериализация - запись обьектов в файл */
 
-import java.io.*;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 
 public class Main {
     public static void main(String[] args) throws Exception {
+        User user = new User();
+        user.liveLevel = 55;
+        user.staticField =  45;
 
-        // создаем класс файл
-        File file = new File("temp.txt");
+        Sword sword = new Sword();
+        sword.level = 5;
+        user.sword = sword;
 
-        if(!file.exists()) {
-            // создаем директорию
-            // file.mkdir();
-            // создаем файл
-            file.createNewFile();
-        }
+        // сереиализуем файл
+        FileOutputStream fileOutputStream = new FileOutputStream("tempFile");
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+        objectOutputStream.writeObject(user);
+        objectOutputStream.close();
 
-        // записываем
-        FileWriter fileWriter = new FileWriter(file);
-        fileWriter.write("str1\n");
-        fileWriter.write("str2\n");
-        // Очищает поток
-        fileWriter.flush();
-        // Закрывает поток
-        fileWriter.close();
+        user.staticField =  35;
 
-        // прочитываем
-        FileReader fileReader = new FileReader(file);
-        char[] chars  = new char[20];
-        fileReader.read(chars);
-        System.out.println("Записи из temp:");
-        System.out.println(chars);
+        // прочитываем файл
+        FileInputStream fileInputStream = new FileInputStream("tempFile");
+        ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
+        User newUser = (User) objectInputStream.readObject();
+        objectOutputStream.close();
 
-        // проверка директория или файл;
-        if(file.isDirectory()) {
-            System.out.println(file.getName() + "Дериктория");
-        } else if(file.isFile()) {
-            System.out.println(file.getName() + ": Файл");
-        }
-        System.out.println();
-
-        /* Более удобные способ */
-
-        File BufferedFile = new File("BufferedTemp.txt");
-
-        // записываем
-        FileWriter bufferedFileWriter = new FileWriter(BufferedFile);
-        BufferedWriter  bufferWriter = new BufferedWriter(bufferedFileWriter);
-        bufferWriter.write("str3");
-        bufferWriter.newLine();
-        bufferWriter.write("str4");
-        // Очищает поток
-        bufferWriter.flush();
-        // Закрывает поток
-        bufferWriter.close();
-
-        // прочитываем
-        FileReader bufferedFileReader = new FileReader(file);
-        BufferedReader bufferedReader = new BufferedReader(bufferedFileReader);
-        System.out.println("Записи из BufferedTemp:");
-        while(bufferedReader.ready()) {
-            System.out.println(bufferedReader.readLine());
-        }
-
+        // 0 - значение по-умолчанию, так как не сериализуемое поле
+        System.out.println(newUser.liveLevel);
+        // значение прочиталось не из файла
+        System.out.println(newUser.staticField);
+        // null - значение по-умолчанию, так как не сериализуемое поле
+        System.out.println(newUser.sword);
     }
 }
