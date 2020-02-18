@@ -1,26 +1,65 @@
-/*
- stringBuilder - если требуется постоянное изменение строк, то лучше использовать StringBuilder
- stringBuffer -  Потокобезопасная, изменяемая последовательность символов
- */
+
+import java.io.*;
 
 public class Main {
-    public static void main(String[] args) {
-         String s1 = new String("abc");
-         String s2 = s1.concat("def");
-         // строка s не изменяемая
-         // System.out.println(s1);
-         // System.out.println(s2);
+    public static void main(String[] args) throws Exception {
 
-         // StringBuilder
-        StringBuilder stringBuilder = new StringBuilder("abc");
-        // Добавляет указанный строку к этой последовательности
-        stringBuilder.append("def");
-        // Вставляет строку в эту последовательность символов.
-        stringBuilder.insert(3, "-");
+        // создаем класс файл
+        File file = new File("temp.txt");
 
+        if(!file.exists()) {
+            // создаем директорию
+            // file.mkdir();
+            // создаем файл
+            file.createNewFile();
+        }
 
-        // все методы синхронизированы, используется для многопоточных приложений
-        // StringBuffer stringBuffer;
+        // записываем
+        FileWriter fileWriter = new FileWriter(file);
+        fileWriter.write("str1\n");
+        fileWriter.write("str2\n");
+        // Очищает поток
+        fileWriter.flush();
+        // Закрывает поток
+        fileWriter.close();
+
+        // прочитываем
+        FileReader fileReader = new FileReader(file);
+        char[] chars  = new char[20];
+        fileReader.read(chars);
+        System.out.println("Записи из temp:");
+        System.out.println(chars);
+
+        // проверка директория или файл;
+        if(file.isDirectory()) {
+            System.out.println(file.getName() + "Дериктория");
+        } else if(file.isFile()) {
+            System.out.println(file.getName() + ": Файл");
+        }
+        System.out.println();
+
+        /* Более удобные способ */
+
+        File BufferedFile = new File("BufferedTemp.txt");
+
+        // записываем
+        FileWriter bufferedFileWriter = new FileWriter(BufferedFile);
+        BufferedWriter  bufferWriter = new BufferedWriter(bufferedFileWriter);
+        bufferWriter.write("str3");
+        bufferWriter.newLine();
+        bufferWriter.write("str4");
+        // Очищает поток
+        bufferWriter.flush();
+        // Закрывает поток
+        bufferWriter.close();
+
+        // прочитываем
+        FileReader bufferedFileReader = new FileReader(file);
+        BufferedReader bufferedReader = new BufferedReader(bufferedFileReader);
+        System.out.println("Записи из BufferedTemp:");
+        while(bufferedReader.ready()) {
+            System.out.println(bufferedReader.readLine());
+        }
 
     }
 }
