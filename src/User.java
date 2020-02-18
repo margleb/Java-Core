@@ -3,9 +3,9 @@ import java.util.Objects;
 
 // Serializable - интерфейс-марка для сериализации обьектов
 // Если не указать то будет ошибка NotSerializableException
-public class User implements Serializable {
+public class User {
     // transient - указывает, что поле не сериализуемо!!!
-    transient int liveLevel;
+    int liveLevel;
     // статическое поле не сиреализуется!
     static int staticField;
     // transient - указывает, что поле не сериализуемо!!!

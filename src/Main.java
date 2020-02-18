@@ -7,9 +7,10 @@ import java.io.ObjectOutputStream;
 
 public class Main {
     public static void main(String[] args) throws Exception {
-        User user = new User();
+        UserChild user = new UserChild();
         user.liveLevel = 55;
         user.staticField =  45;
+        user.childLavel =  10;
 
         Sword sword = new Sword();
         sword.level = 5;
@@ -26,7 +27,7 @@ public class Main {
         // прочитываем файл
         FileInputStream fileInputStream = new FileInputStream("tempFile");
         ObjectInputStream objectInputStream = new ObjectInputStream(fileInputStream);
-        User newUser = (User) objectInputStream.readObject();
+        UserChild newUser = (UserChild) objectInputStream.readObject();
         objectOutputStream.close();
 
         // 0 - значение по-умолчанию, так как не сериализуемое поле
@@ -35,5 +36,6 @@ public class Main {
         System.out.println(newUser.staticField);
         // null - значение по-умолчанию, так как не сериализуемое поле
         System.out.println(newUser.sword);
+        System.out.println(newUser.childLavel);
     }
 }
