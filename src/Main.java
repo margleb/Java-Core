@@ -1,130 +1,171 @@
 /*
-toString() метод в Java используется для предоставления ясной и достаточной информации об объектаx ( Object ) в удобном для человека виде.
-Правильное переопределение метода toString() может помочь в ведении журнала работы и в отладке Java программы предоставляя ценную и важную информацию.
+Java Collection Framework — иерархия интерфейсов и их реализаций, которая является частью JDK и позволяет разработчику пользоваться большим количесвом структур данных из «коробки».
 
-Map - обьект, хранящий ключи к значениям. Map не может содержать дубликаты ключей, каждый ключ может соответсвовать только одному значению
-HashMap - хранит значения в произвольном порядке, но позволяет быстро искать элементы карты. Позволяет задавать ключ или значение ключевым словом null.
+На вершине иерархии в Java Collection Framework располагаются 2 интерфейса:
+- Collection -  простые последовательные наборы элементов.
+  - List -  Реализации этого интерфейса представляют собой упорядоченные коллекции. Кроме того, разработчику предоставляется возможность доступа к элементам коллекции по индексу и по значению (так как реализации позволяют хранить дубликаты, результатом поиска по значению будет первое найденное вхождение).
+  - Queue - Этот интерфейс описывает коллекции с предопределённым способом вставки и извлечения элементов, а именно — очереди FIFO (first-in-first-out).
+  - Set - Коллекция, не содержащая дублированные элементы
+- Map. - наборы пар «ключ — значение» (словари).
 
-object.hashCode() -  отображает место(адрес) объекта в памяти в виде int значения.
-Xеширование — преобразование входного массива данных произвольной длины в выходную битовую строку фиксированной длины.
+Чем коллекции лучше массивов?
+В них больше функционала, делать это над массивами зачастую нецелесообразно (или плохое качество кода или долго реализовывать или требуют хорошего понимания алгоритмов).
 
-Если у обьектов hashCode равноы, то это не значит что они равны по equals, но если они равны по equals, то их hashCode должны быть равны
-При переопределении одного из этих методов, требуется переопределение и второго
+Когда лучше использовать массивы, чем коллекции?
+Когда нужно хранить набор данных фиксированного размера
 
-При использовании в Maps обьекта в качестве ключа, всегда необходимо переопределять его equals() и hashCode()
+Коллекции бывают трех типов
+1. Упорядоченые (Ordered), например LinkedHasSet()
+2. Неупорядоченные, например HashSet()
+3. Отсортированные, например TreeSet()
+ */
 
-*/
-
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-
-class Book {
-    String author, name;
-}
-
-class LibraryCard {
-
-    int number;
-
-    @Override
-    // int значение позволяет нам записать не более 2*32 уникальных номеров
-    // в случае, если количество элементов в массиве превышает эту цифру,
-    // то уникальные номера могут повторятся, для того, чтобы их различить
-    // используется дополнительно метод equals
-    public boolean equals(Object o) {
-        // если это один и тот же обьект
-        if (this == o) return true;
-        // если объект равен null, или название текщуего класса, не равно
-        // названию класса передаваемого обьекта
-        if (o == null || getClass() != o.getClass()) return false;
-        // проверяем схожесть номеров
-        LibraryCard that = (LibraryCard) o;
-        return number == that.number;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(number);
-    }
-
-}
+import java.util.*;
 
 public class Main {
-    int value;
-    @Override
-    public String toString() {
-        return "Вывод информации об обьекте: " + getClass().getName();
+    public static void ExampleCollection() {
+        // массивы всегда определенного размера, в отличии от коллекций
+        int[] array = new int[15];
+        Collection collection = new ArrayList();
+        collection.add("1");
+        collection.add("2");
+        collection.add("3");
+        collection.remove("2");
+        // цикл
+        Iterator iterator = collection.iterator();
+        // есть ли следюущий эл. в колекции
+        while(iterator.hasNext()) {
+            // выводит следующий элемент
+            System.out.println(iterator.next());
+        }
+        // с помочью цикла for
+        for (Object obj: collection) {
+            System.out.println(obj);
+        }
+        // Collections collections;
+        // Arrays arrays;
     }
 
-    public static void getBooksList() {
-        // 1ая книга
-        Book book1 = new Book();
-        book1.author = "Рей Бредбери";
-        book1.name = "451° по Фаренгейту";
-        // 2ая книга
-        Book book2 = new Book();
-        book2.author = "Михаил Булгаков";
-        book2.name = "Мастер и Маргарита";
-        // 3я книга
-        Book book3 = new Book();
-        book2.author = "Даниел Киз";
-        book2.name = "Цветы для Элджернона";
+    public static void MajorCollections() {
+        /* наследуются от Collection */
 
-        // создаем ассоциативный массив
-        Map<String, Book> books = new HashMap<>();
-        books.put(book1.name, book1);
-        books.put(book2.name, book2);
-        books.put(book3.name, book3);
+        // cтандартный массив индекс - значение
+        List listCollection = new ArrayList();
+        listCollection.add("1");
+        listCollection.add("2");
+        listCollection.add("3");
+        // переписываем 2ой элемент на значение 5
+        listCollection.set(2, "5");
+        // вставляем в качестве 2ого элемента 6
+        listCollection.add(1, 6);
+        System.out.println("Cписок:");
+        // System.out.println(listCollection.get(1));
+        for(int i = 0; i < listCollection.size(); i++) {
+            // возращает элемент в определенной позиции в массиве
+            System.out.println(listCollection.get(i));
+        }
 
-        System.out.println("Список книг в массиве: \n" + books + "\n");
+        // очередь
+        Queue queueCollection = new PriorityQueue();
+        //  добавляет элемент obj в конец очереди. Если элемент удачно добавлен, возвращает true, иначе - false
+        queueCollection.offer("1");
+        queueCollection.offer("2");
+        queueCollection.offer("3");
 
-        // получаем конкретную книгу из ассоциативного массива
-        Book getBook1 = books.get("Мастер и Маргарита");
-        System.out.println("Автор книги " + getBook1.name + ": " + getBook1.author + ", a ee хеш-код " + getBook1.hashCode());
+        // Получает, но не удаляет первый элемент очереди. Возращает null, если элемента не существует
+        System.out.println("Первый элемент в очереди \n"  + queueCollection.peek());
+
+        System.out.println("Очередь с удалением:");
+        Iterator iterator = queueCollection.iterator();
+        while(iterator.hasNext()) {
+            // Получает и удаляет последний элемент в очереди
+            // или возращает null, если очередь пуста
+            System.out.println(queueCollection.poll());
+            // System.out.println(iterator.next());
+        }
+
+        // кол-во элементов в очереди
+        System.out.println("Количество элементов в очереди \n" + queueCollection.size());
+
+
+        Set setCollection = new HashSet();
+        setCollection.add("1");
+        // каждый элемент в cете добавляется один раз!
+        setCollection.add("2");
+        setCollection.add("2");
+        setCollection.add("2");
+        // каждый элемент в cете добавляется один раз!
+        setCollection.add("3");
+        setCollection.add("3");
+        System.out.println("Cеты:");
+        for(Object obj: setCollection) {
+            System.out.println(obj);
+        }
+
+        // ассоциативный массив
+        Map<Integer, String> passports = new HashMap();
+        passports.put(212133, "Лидия Аркадьевна Бубликова");
+        passports.put(162348, "Иван Михайлович Серебряков");
+        passports.put(8082771, "Дональд Джон Трамп");
+        passports.put(917352, "Алексей Андреевич Ермаков");
+        passports.put(925648, "Максим Олегович Архаров");
+
+        // Возвращает представление отображений, содержащихся в этой карте
+        System.out.println("Accоциативный массив: ");
+        // Set set = passports.entrySet();
+        // Пробигаемся по ключами
+        Set set = passports.keySet();
+        for(Object obj: set) {
+            System.out.println(obj);
+        }
+
+        System.out.println("ФИО читателя по нормеру паспорта 8082771:");
+        System.out.println(passports.get(8082771));
 
     }
 
-    public static void GetBookByCard() {
+    public static void TypeCollections() {
 
-        // 1ая книга
-        Book book4 = new Book();
-        book4.author = "Федор Достоевский";
-        book4.name = "Преступление и наказание";
+        // Неупорядочная коллекция HashSet
+        System.out.println("Неупорядочная коллекция HashSet:");
+        Collection HashSetCollection = new HashSet();
+        HashSetCollection.add("4");
+        HashSetCollection.add("3");
+        HashSetCollection.add("2");
+        HashSetCollection.add("1");
+        // У HashSet нет гарантии, что элементы выведутся в упорядочной последовтельности
+        for(Object obj: HashSetCollection) {
+            System.out.println(obj);
+        }
 
-        // Пример получения книг по id читательского билета
-        Map<LibraryCard, Book> booksByCard = new HashMap<>();
+        // Упорядочная коллекция LinkedHashSet
+        System.out.println("Упорядочная коллекция LinkedHashSet:");
+        Collection linkedHashSetCollection = new LinkedHashSet();
+        linkedHashSetCollection.add("4");
+        linkedHashSetCollection.add("3");
+        linkedHashSetCollection.add("2");
+        linkedHashSetCollection.add("1");
+        // Отсортирована по принципу добаления
+        for(Object obj: linkedHashSetCollection) {
+            System.out.println(obj);
+        }
 
-        // Читательский билет №1
-        LibraryCard libraryCard1 = new LibraryCard();
-        libraryCard1.number = 12345;
-
-        booksByCard.put(libraryCard1, book4);
-
-        // Читательский билет №2
-        LibraryCard libraryCard2 = new LibraryCard();
-        libraryCard2.number = 12345;
-        booksByCard.get(libraryCard2);
-
-        System.out.println("Список книг в массиве: \n" + booksByCard);
-
-        // мы не можем получить по аналогичному читатьельскому билету
-        // так как он находится в другом участке памяти
-        Book getBook4 = (Book) booksByCard.get(libraryCard2);
-        System.out.println(getBook4.name);
-
+        // Отсортированая коллекция  TreeSet
+        System.out.println("Упорядочная коллекция TreeSet:");
+        Collection TreeSetCollection = new TreeSet();
+        TreeSetCollection.add("2");
+        TreeSetCollection.add("3");
+        TreeSetCollection.add("1");
+        for(Object obj: TreeSetCollection) {
+            System.out.println(obj);
+        }
     }
 
     public static void main(String[] args) {
-        // toString() метод вызывается неявно
-        // System.out.println(new Main() + "\n");
-
-        // Получаем список книг
-        // getBooksList();
-
-        // Получаем номер паспорта по имени
-        GetBookByCard();
-
+        // ExampleCollection();
+        // MajorCollections();
+        TypeCollections();
     }
+
+
 }
