@@ -1,34 +1,31 @@
+import java.util.*;
+
 public class Main {
     public static void main(String[] args) {
-        //  0 0 0 0 1 1 0 1
-        int a = 13; // 1101
 
-        /** Позиция при сдвиге влево **/
-        // при сдвиге, последние биты заполняем нулями
-        // 13 * 2
-        // 0 0 0 1 1 0 1 0
-        int b = a << 1;
-        // System.out.println(b); // 11010 (26)
+      // связанный список выводится в порядке добавляения
+      Queue queue = new LinkedList();
+      queue.offer("1");
+      queue.offer("2");
+      queue.offer("3");
+      queue.offer("4");
 
-        // 0 0 1 1 0 1 0 0
-        // 13 * 2²
-        int с = a << 2;
-        // System.out.println(с); // 110100 (52)
+      List list = (List) queue;
+      Collections.sort(list);
 
-        //  0 1 1 0 1 0 0 0
-        // 13 * 2³
-        int d = a << 3;
-        // System.out.println(d); // 1101000 (78)
+      while(queue.size() > 0) {
+          System.out.println(queue.poll());
+      }
 
-        /** Позиция при сдвиге вправо **/
-        //  0 0 0 0 0 1 1 0
-        // 13 / 2
-        int e = a >> 1;
-        System.out.println(e); // 110 (6)
-
-        //  0 0 0 0 0 0 1 1
-        // 13 / 2²
-        int r = a >> 2;
-        System.out.println(r); // 011 (3)
+     // отсортированная очередь
+     Queue queue2 = new PriorityQueue();
+     queue2.offer("1");
+     queue2.offer("5");
+     queue2.offer("3");
+     queue2.offer("4");
+     queue2.offer("2");
+     while(queue2.size() > 0) {
+       System.out.println(queue2.poll());
+     }
     }
 }
