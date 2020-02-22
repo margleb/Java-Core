@@ -2,30 +2,38 @@ import java.util.*;
 
 public class Main {
     public static void main(String[] args) {
+        // хранит обьекты на основании хеша
+        Map hasMap = new HashMap();
+        hasMap.put("1", "one");
+        hasMap.put("3", "three");
+        hasMap.put("2", "two");
+        System.out.println(hasMap.get("1"));
 
-      // связанный список выводится в порядке добавляения
-      Queue queue = new LinkedList();
-      queue.offer("1");
-      queue.offer("2");
-      queue.offer("3");
-      queue.offer("4");
+        System.out.println();
 
-      List list = (List) queue;
-      Collections.sort(list);
+        // все методы синхронизированы
+        Map hashtable = new Hashtable();
+        // упорядочный список
+        Map linkedHashMap = new LinkedHashMap();
+        linkedHashMap.put("1", "one");
+        linkedHashMap.put("3", "three");
+        linkedHashMap.put("2", "two");
+        Set set = linkedHashMap.entrySet();
+        for(Object obj: set) {
+            System.out.println(obj);
+        }
 
-      while(queue.size() > 0) {
-          System.out.println(queue.poll());
-      }
+        System.out.println();
 
-     // отсортированная очередь
-     Queue queue2 = new PriorityQueue();
-     queue2.offer("1");
-     queue2.offer("5");
-     queue2.offer("3");
-     queue2.offer("4");
-     queue2.offer("2");
-     while(queue2.size() > 0) {
-       System.out.println(queue2.poll());
-     }
+        // отсортированный список
+        // Red-Black алгоритм сортировки (погуглить)
+        Map treeMap = new TreeMap();
+        treeMap.put("1", "one");
+        treeMap.put("3", "three");
+        treeMap.put("2", "two");
+        Set set1 = treeMap.entrySet();
+        for(Object obj: set1) {
+            System.out.println(obj);
+        }
     }
 }
