@@ -1,40 +1,55 @@
 /*
-Рискуя на себя навлечь обвинения в сексизме, таки не удержусь и приведу пример атомарной операции: беременность - операция строго атомарная, всегда есть один и только один отец (всякие генные ухищрения вынесем за скобки).
-И наоборот пример неатомарной операции: воспитание ребенка - увы операция неатомарная, ребенок есть к сожалению субъект множества различных несинхронизированных операций над неокрепшей душой ребенка: мама, папа, бабушка, дедушка, зомбоящик, детсад, школа, друзья, подруги и т.д. по списку.
+Concurrency это работа с многопоточным кодом.
+Обычно под этим понимают:
+1. Управление (создание/запуск/остановка) потоками виртуальной машины Java.
+2. Управление потоком выполнения программы (синхронизация потоков).
+3. Управление доступом к памяти (к данным) в многопоточной среде
+https://docs.oracle.com/javase/7/docs/api/java/util/concurrent/package-summary.html
 
-Если убрать Thread.sleep то операция остается отомарной, просто не все данные успевают посчитаться,
-и соответсвенно нам выводятся данные не конечные, а в отдельном потоке переменная i все еще увеличивается до 10 тысяч.
 
-Volotile - Это означает, что значение переменной будет "всегда читаться".
-Например, в многопоточных приложениях один поток прочёл значение a=1, передал управление другому потоку, который изменил значение на a=2, потом управление вернулось. Так вот, без volatile значение a у первого потока будет 1, т.к. первый поток "помнит", что a=1, с volatile - 2, т.к. первый поток снова прочтет значение и получит уже измененное.
+Главное правило -- синхронизировать любой доступ к ресурсу (в данном случае коллекции), будь то чтение или запись. Как именно -- на первых порах не столько важно. Методы-обертки с модификатором synchronizhed -- как один из вариантов. Чем больше опыт работы с многопоточностью -- тем больше вариантов, в зависимости от требований.
+Также нужно помнить, что даже специализированные потокобезопасные коллекции (из java.util.concurrent.*) при определенных сценариях тоже могут нуждаться в дополнительной синхронизации.
 
 */
 
-import java.util.concurrent.atomic.AtomicInteger;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Main {
+    //
+    List list = Collections.synchronizedList(new ArrayList<>());
 
-    static int i;
-    static AtomicInteger atomicInteger = new AtomicInteger(0);
-    public static void main(String[] args) throws InterruptedException {
-        for(int i = 0; i < 100_000; i++) {
-            new MyThread().start();
+    public static void main(String[] args) {
+        NameList nameList = new NameList();
+        nameList.add("first");
+        class MyThread extends Thread {
+            @Override
+            public void run() {
+                System.out.println(nameList.removeFirst());
+            }
         }
-        Thread.sleep(2_000);
-        System.out.println(i);
-        // sSystem.out.println(atomicInteger.get());
+        MyThread myThread =  new MyThread();
+        myThread.setName("one");
+        myThread.start();
+        new MyThread().start();
     }
 
-    static class MyThread extends Thread {
-        @Override
-        public void run() {
-            // 1. int k = i + 1; // i = 4; k = 5
-                // 1. int k = i + 1; // i = 4; k = 5;
-                // 2. i = k // i = 5;
-            // 2. i = k; // i = 5;
-            i++;
-            atomicInteger.incrementAndGet();
+    static class NameList {
+        List list = Collections.synchronizedList(new ArrayList<>());
+        public void add(String name) {
+            list.add(name);
+        }
+        // Даже используя synchronizedList, операции по работе с возвращенной коллекцией всё равно надо заворачивать в synchronized.
+        public synchronized String removeFirst() {
+            if(list.size() > 0) {
+                if(Thread.currentThread().getName().equals("one")) {
+                    Thread.yield();
+                }
+                // без синхронизации тут выйдет ошибка
+                return (String) list.remove(0);
+            }
+            return null;
         }
     }
-
 }
