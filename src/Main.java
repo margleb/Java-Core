@@ -1,64 +1,44 @@
+/* C помочью метод tryLock() мы можем проверить залочин ли другой ресурс и если залочен, то выполнить какую либо другую работу */
+
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        Resource resource = new Resource();
-        resource.i = 5;
-        resource.j = 5;
-
-        MyThread myThread = new MyThread();
-        myThread.setName("one");
-        MyThread myThread1 = new MyThread();
-
-        myThread.resource = resource;
-        myThread1.resource = resource;
-
-        myThread.start();
-        myThread1.start();
-
-        myThread.join();
-        myThread1.join();
-
-        System.out.println(resource.i);
-        System.out.println(resource.j);
+    static Lock lock = new ReentrantLock();
+    public static void main(String[] args) {
+        new Thread1().start();
+        new Thread2().start();
     }
-    static class MyThread extends Thread {
-        Resource resource;
+
+    static class Thread1 extends Thread {
         @Override
         public void run() {
-            resource.changeI();
-            // resource.changeJ();
+            lock.lock();
+            System.out.println(getName() + " start working");
+            try {
+                sleep(5);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            System.out.println(getName() + " stop working");
+            lock.unlock();
+            System.out.println(getName() + " lock is released");
         }
     }
-}
-class Resource {
-    int i;
-    int j;
 
-    // более гибкий способ локинга, позволяет блокировать стразу несколько методов
-    Lock lock = new ReentrantLock();
-
-    void changeI() {
-        // аналог synchronized
-        lock.lock(); // блокируем
-        int k = this.i;
-        if(Thread.currentThread().getName().equals("one")) {
-            Thread.yield();
+    static class Thread2 extends Thread {
+        @Override
+        public void run() {
+            System.out.println(getName() + " begin wirking");
+            while (true) {
+                if (lock.tryLock()) {
+                    System.out.println(getName() + " working");
+                    break;
+                } else {
+                    System.out.println(getName() + " waiting");
+                }
+            }
         }
-        k++;
-        this.i = k;
-        changeJ();
-        // lock.unlock();
     }
 
-    void changeJ() {
-        int k = this.j;
-        if(Thread.currentThread().getName().equals("one")) {
-            Thread.yield();
-        }
-        k++;
-        this.j = k;
-        lock.unlock(); // разблокируем
-    }
 }
