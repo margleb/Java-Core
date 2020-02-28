@@ -1,47 +1,41 @@
-import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.Exchanger;
+import java.util.concurrent.BrokenBarrierException;
+import java.util.concurrent.CyclicBarrier;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException {
-        Exchanger<String> exchanger = new Exchanger<>();
-        new Mike(exchanger);
-        new Anket(exchanger);
+    public static void main(String[] args) {
+        // метод run запуститься только тогда, когда три потока, вернут await()
+        CyclicBarrier cyclicBarrier = new CyclicBarrier(3, new Run());
+        new Sportman(cyclicBarrier);
+        new Sportman(cyclicBarrier);
+        new Sportman(cyclicBarrier);
     }
-    static class Mike extends Thread {
-      Exchanger<String> exchanger;
-      public Mike(Exchanger<String> excanger) {
-          this.exchanger = excanger;
-          start();
-      }
+
+    static class Run extends Thread {
+        CyclicBarrier barrier;
         @Override
         public void run() {
-            try {
-                exchanger.exchange("I'm 20 years old");
-                sleep(3000);
-                exchanger.exchange("Hi my name is Mike");
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+            System.out.println("Run is begin");
         }
     }
 
-    static class Anket extends Thread {
-        Exchanger<String> exchanger;
-        public Anket(Exchanger<String> exchanger) {
-            this.exchanger = exchanger;
+    static class Sportman extends Thread {
+        CyclicBarrier barrier;
+        public Sportman(CyclicBarrier barrier) {
+            this.barrier = barrier;
             start();
         }
+
         @Override
         public void run() {
             try {
-                // Выводится информация из другого потока
-                System.out.println(exchanger.exchange(null));
-                System.out.println(exchanger.exchange(null));
+                barrier.await();
             } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (BrokenBarrierException e) {
                 e.printStackTrace();
             }
         }
-    }
 
+    }
 
 }
