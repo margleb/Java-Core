@@ -1,44 +1,46 @@
-/* C помочью метод tryLock() мы можем проверить залочин ли другой ресурс и если залочен, то выполнить какую либо другую работу */
-
+import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 
 public class Main {
     static Lock lock = new ReentrantLock();
+    // c помочью conditions можно сигнализировать об определенных условиях
+    static Condition condition = lock.newCondition();
+    static public int account = 0;
+
     public static void main(String[] args) {
-        new Thread1().start();
-        new Thread2().start();
+        new AccountMinus().start();
+        new AccountPlus().start();
     }
 
-    static class Thread1 extends Thread {
+    static class AccountPlus extends Thread {
         @Override
         public void run() {
             lock.lock();
-            System.out.println(getName() + " start working");
-            try {
-                sleep(5);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            System.out.println(getName() + " stop working");
+            account += 10;
+            // говорит о том что деньги поступили на счет
+            condition.signal();
             lock.unlock();
-            System.out.println(getName() + " lock is released");
         }
     }
 
-    static class Thread2 extends Thread {
+    static class AccountMinus extends Thread {
         @Override
         public void run() {
-            System.out.println(getName() + " begin wirking");
-            while (true) {
-                if (lock.tryLock()) {
-                    System.out.println(getName() + " working");
-                    break;
-                } else {
-                    System.out.println(getName() + " waiting");
+            // System.out.println(account);
+            if(account < 10) {
+                try {
+                    lock.lock();
+                    System.out.println("account = " + account);
+                    condition.await();
+                    System.out.println("account = " + account);
+                    lock.unlock();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
             }
+            account -= 10;
+            System.out.println("account at the end = " + account);
         }
     }
-
 }
