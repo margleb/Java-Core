@@ -1,28 +1,25 @@
-import java.util.concurrent.BlockingDeque;
-import java.util.concurrent.BlockingQueue;
-import java.util.concurrent.PriorityBlockingQueue;
+import java.util.concurrent.ThreadFactory;
 
 public class Main {
     public static void main(String[] args) {
-        // Блокирующая очердь (эл. невозможно достать, пока его не положат)
-        BlockingQueue<String> queue = new PriorityBlockingQueue<>();
-        // достает элемент
-        new Thread() {
+        //
+        ThreadFactory threadFactory = new ThreadFactory() {
             @Override
-            public void run() {
-                try {
-                    System.out.println(queue.take());
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+            public Thread newThread(Runnable r) {
+                Thread thread = new Thread(r);
+                thread.setPriority(Thread.MAX_PRIORITY);
+                return thread;
             }
-        }.start();
-        // кладем элемент
-        new Thread() {
-            @Override
-            public void run() {
-                queue.add("This is string");
-            }
-        }.start();
+        };
+        threadFactory.newThread(new MyRun()).start();
     }
+
+    static class MyRun implements Runnable {
+        @Override
+        public void run() {
+            System.out.println(1);
+        }
+    }
+
 }
+
