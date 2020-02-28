@@ -1,27 +1,28 @@
-import java.util.concurrent.Phaser;
+import java.util.concurrent.BlockingDeque;
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.PriorityBlockingQueue;
 
 public class Main {
     public static void main(String[] args) {
-        Phaser phaser = new Phaser(2);
-        // 2 мойщика
-        new Washer(phaser);
-        new Washer(phaser);
-    }
-    // мойшик машины
-    static class Washer extends Thread {
-        Phaser phaser;
-        public Washer(Phaser phaser) {
-            this.phaser = phaser;
-            start();
-        }
-        @Override
-        public void run() {
-            // 3 автомабиля
-            for(int i = 0; i < 3; i++) {
-                System.out.println(getName() + " washing the car");
-                // ожидание завершения всех потоков
-                phaser.arriveAndAwaitAdvance();
+        // Блокирующая очердь (эл. невозможно достать, пока его не положат)
+        BlockingQueue<String> queue = new PriorityBlockingQueue<>();
+        // достает элемент
+        new Thread() {
+            @Override
+            public void run() {
+                try {
+                    System.out.println(queue.take());
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-        }
+        }.start();
+        // кладем элемент
+        new Thread() {
+            @Override
+            public void run() {
+                queue.add("This is string");
+            }
+        }.start();
     }
 }
