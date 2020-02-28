@@ -1,41 +1,27 @@
-import java.util.concurrent.BrokenBarrierException;
-import java.util.concurrent.CyclicBarrier;
+import java.util.concurrent.Phaser;
 
 public class Main {
     public static void main(String[] args) {
-        // метод run запуститься только тогда, когда три потока, вернут await()
-        CyclicBarrier cyclicBarrier = new CyclicBarrier(3, new Run());
-        new Sportman(cyclicBarrier);
-        new Sportman(cyclicBarrier);
-        new Sportman(cyclicBarrier);
+        Phaser phaser = new Phaser(2);
+        // 2 мойщика
+        new Washer(phaser);
+        new Washer(phaser);
     }
-
-    static class Run extends Thread {
-        CyclicBarrier barrier;
-        @Override
-        public void run() {
-            System.out.println("Run is begin");
-        }
-    }
-
-    static class Sportman extends Thread {
-        CyclicBarrier barrier;
-        public Sportman(CyclicBarrier barrier) {
-            this.barrier = barrier;
+    // мойшик машины
+    static class Washer extends Thread {
+        Phaser phaser;
+        public Washer(Phaser phaser) {
+            this.phaser = phaser;
             start();
         }
-
         @Override
         public void run() {
-            try {
-                barrier.await();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            } catch (BrokenBarrierException e) {
-                e.printStackTrace();
+            // 3 автомабиля
+            for(int i = 0; i < 3; i++) {
+                System.out.println(getName() + " washing the car");
+                // ожидание завершения всех потоков
+                phaser.arriveAndAwaitAdvance();
             }
         }
-
     }
-
 }
