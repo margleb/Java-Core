@@ -1,24 +1,41 @@
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
-import java.util.concurrent.FutureTask;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+/*
+*  Если в программе создается большое количество кратковременных потоков,тоимеет смысл использовать пулп отоков
+*  Другая причина для использования пула потоков — необходимость ограничить количество параллельно выполняющихся потоков
+*/
 
 public class Main {
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        Callable<Integer> callable = new MyCallable();
-        FutureTask futureTask = new FutureTask(callable);
-        new Thread(futureTask).start();
-        // вернет результат
-        System.out.println(futureTask.get());
+        // Executors executor; // класс для создания пула потоков
+        // Executors.newSingleThreadExecutor(); // Пул с единственным потоком, выполняющим переданные ему задачи поочередно
+        // Executors.newCachedThreadPool(); // Новые потоки создаются по мере необходимости, а проста¬ ивающие потокисохраняютсявтечение 60 секунд
+
+        // Пул содержит фиксированное множество наборов потоков,а простаивающие потоки сохраняются в течение 60 секунд
+        ExecutorService newFixedThreadPool = Executors.newFixedThreadPool(2);
+
+        // В результате вызова метода submit() возвращается объект типа Future, позволяющий оценить состояние задачи
+        newFixedThreadPool.submit(new MyRunnable()); // перадача задачи обьекту типа ExecutorService c помочью метода submit
+        System.out.println(newFixedThreadPool.submit(new MyCallable()).get()); // вернет Feture и вызовет метод get()
+
+        // Останавливает службу, завершая все запущенные задачи ине принимая новых.
+        newFixedThreadPool.shutdown();
     }
-    // интерфейс callable позволяет запустить метод call в отдельном потоке и при этом получить результат
-    static class MyCallable implements Callable<Integer> {
+
+    static class MyRunnable implements Runnable {
         @Override
-        public Integer call() throws Exception {
-            int j = 0;
-            for(int i = 0; i < 10; i++, j++) {
-                Thread.sleep(500);
-            }
-            return j;
+        public void run() {
+            System.out.println(1);
+        }
+    }
+
+    static class MyCallable implements Callable<String> {
+        @Override
+        public String call() throws Exception {
+            return "2";
         }
     }
 }
