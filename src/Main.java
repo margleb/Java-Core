@@ -1,46 +1,24 @@
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.FutureTask;
 
 public class Main {
-    static Lock lock = new ReentrantLock();
-    // c помочью conditions можно сигнализировать об определенных условиях
-    static Condition condition = lock.newCondition();
-    static public int account = 0;
-
-    public static void main(String[] args) {
-        new AccountMinus().start();
-        new AccountPlus().start();
+    public static void main(String[] args) throws ExecutionException, InterruptedException {
+        Callable<Integer> callable = new MyCallable();
+        FutureTask futureTask = new FutureTask(callable);
+        new Thread(futureTask).start();
+        // вернет результат
+        System.out.println(futureTask.get());
     }
-
-    static class AccountPlus extends Thread {
+    // интерфейс callable позволяет запустить метод call в отдельном потоке и при этом получить результат
+    static class MyCallable implements Callable<Integer> {
         @Override
-        public void run() {
-            lock.lock();
-            account += 10;
-            // говорит о том что деньги поступили на счет
-            condition.signal();
-            lock.unlock();
-        }
-    }
-
-    static class AccountMinus extends Thread {
-        @Override
-        public void run() {
-            // System.out.println(account);
-            if(account < 10) {
-                try {
-                    lock.lock();
-                    System.out.println("account = " + account);
-                    condition.await();
-                    System.out.println("account = " + account);
-                    lock.unlock();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
+        public Integer call() throws Exception {
+            int j = 0;
+            for(int i = 0; i < 10; i++, j++) {
+                Thread.sleep(500);
             }
-            account -= 10;
-            System.out.println("account at the end = " + account);
+            return j;
         }
     }
 }
