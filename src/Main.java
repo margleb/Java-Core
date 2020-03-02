@@ -1,38 +1,21 @@
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.util.concurrent.Callable;
-
-/*
-*  Аспектно - ориентированное программирование
-*  Перед вызовом какого либо кода, мы сначала вызываем код из invokе, а потом непосредсттвенно метод
-*/
+import javax.swing.*;
+import java.awt.*;
 
 public class Main {
-        public static void main(String[] args) {
-            InvocationHandler handler = new MyProxy(new Integer(5));
-            Class[] classes = new Class[] {Comparable.class, Callable.class};
-            // обьект, импламентирующий несколько интерфейсов
-            Object proxy = Proxy.newProxyInstance(null, classes, handler);
-            // proxy.getClass();
-            // proxy.toString();
-            System.out.println(((Comparable)proxy).compareTo(3));
-        };
+    public static void main(String[] args) {
+        JFrame jFrame = new JFrame() {};
+        jFrame.setVisible(true);
+        jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        static class MyProxy implements InvocationHandler {
+        // jFrame.setSize(500, 300);
+        // jFrame.setLocation(500, 400);
 
-            Object target;
-
-            public MyProxy(Object target) {
-                this.target = target;
-            }
-
-            @Override
-            public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-                System.out.println(args);
-                // return method.invoke(target, args);
-                return "bla";
-            }
-
-        }
+        // дефолтные инструменты
+        Toolkit toolkit = Toolkit.getDefaultToolkit();
+        // получаем размер нашего окна
+        Dimension dimension = toolkit.getScreenSize();
+        // Устанавливаем координаты и ширину/высоту окна
+        jFrame.setBounds(dimension.width / 2 - 250, dimension.height / 2 - 150, 500, 300);
+        jFrame.setTitle("This is my app");
+    }
 }
