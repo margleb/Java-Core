@@ -1,21 +1,33 @@
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class Main {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        JFrame jFrame = getFrame();
+        // создаем панель
+        JPanel jPanel = new JPanel();
+        jFrame.add(jPanel);
+        // создаем кнопку
+        JButton jButton = new JButton("submit");
+        jPanel.add(jButton);
+        // cоздаем событие
+        jButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                jPanel.setBackground(Color.blue);
+            }
+        });
+    }
+
+
+
+    static JFrame getFrame() {
         JFrame jFrame = new JFrame() {};
         jFrame.setVisible(true);
+        jFrame.setBounds(750, 250, 500, 500);
         jFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-        // jFrame.setSize(500, 300);
-        // jFrame.setLocation(500, 400);
-
-        // дефолтные инструменты
-        Toolkit toolkit = Toolkit.getDefaultToolkit();
-        // получаем размер нашего окна
-        Dimension dimension = toolkit.getScreenSize();
-        // Устанавливаем координаты и ширину/высоту окна
-        jFrame.setBounds(dimension.width / 2 - 250, dimension.height / 2 - 150, 500, 300);
-        jFrame.setTitle("This is my app");
+        return jFrame;
     }
 }
