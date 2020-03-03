@@ -1,43 +1,59 @@
+/*
+У нас есть 2 основных интерфейса:
+1. MouseMotionListener
+2. MouseListener
+Которые имплементят множество разных методов для работы с мышью, все они присутсвуют в MouseAdapter и мы можем переписать те, которые нам нужны
+
+
+ */
+
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class Main {
 
     static JFrame jframe = getFrame();
+
     // cоздаем панель
-    static JPanel jpanel = new JPanel();
+    // static JPanel jpanel = new JPanel();
 
     public static void main(String[] args) {
-        jframe.add(jpanel);
-        // абстрактный экшн
-        AbstractAction myAction = new MyAction();
-        // создаем кнопку
-        JButton jbutton = new JButton(myAction);
-        jbutton.setText("Кнопка");
-        jpanel.add(jbutton);
 
-        // создаем сочетание клавиш
-        KeyStroke keyStroke = KeyStroke.getKeyStroke("ctrl B");
-        // создаем Map, c указанием при каком условии будет срабатывать сочетание клавиш (например, при фокусе)
-        InputMap inputMap = jpanel.getInputMap(JComponent.WHEN_IN_FOCUSED_WINDOW);
-        // индентифицируем какой либо обьект и его событие
-        inputMap.put(keyStroke, "changeColor");
-        // при вызове определенного обьекта, вызывается action
-        ActionMap actionMap = jpanel.getActionMap();
-        actionMap.put("changeColor", myAction);
+        // jframe.add(jpanel);
+        // jpanel.addMouseListener(new MouseAdapter() {
+            // @Override
+            // public void mouseClicked(MouseEvent e) {
+                // super.mouseClicked(e);
+                // jpanel.setBackground(Color.blue);
+            // }
+        // });
+
+        // Отслеживание координат мыши
+        JComponent jComponent = new MyComponent();
+        jframe.add(jComponent);
+        jframe.addMouseMotionListener(new MouseAdapter() {
+            @Override
+            // при движении мыши будет происходить событие
+            public void mouseMoved(MouseEvent e) {
+                super.mouseMoved(e);
+                MyComponent.xCoord = e.getX();
+                MyComponent.yCoord = e.getY();
+                // repaint() перерисует координаты
+                jComponent.repaint();
+            }
+        });
     }
 
-    static class MyAction extends AbstractAction {
 
-        // MyAction() {
-            // putValue(AbstractAction.SHORT_DESCRIPTION, "This is gleb");
-        // }
-
+    static class MyComponent extends JComponent {
+        public static int xCoord;
+        public static int yCoord;
         @Override
-        public void actionPerformed(ActionEvent e) {
-            jpanel.setBackground(Color.blue);
+        public void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            ((Graphics2D)g).drawString("Coorinates x: " + xCoord + " y " + yCoord, 50, 50);
         }
     }
 
