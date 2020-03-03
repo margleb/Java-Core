@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.Border;
 
 
 public class Main {
@@ -8,29 +9,33 @@ public class Main {
 
     public static void main(String[] args) {
         jframe.add(jpanel);
+        // чекбокс
+        jpanel.add(new JCheckBox("check box label"));
+        // радиокнопки
+        JRadioButton jRadioButton1 = new JRadioButton("one");
+        JRadioButton jRadioButton2 = new JRadioButton("two");
+        jpanel.add(jRadioButton1);
+        jpanel.add(jRadioButton2);
+        // группируем радиокнопки
+        ButtonGroup buttonGroup = new ButtonGroup();
+        buttonGroup.add(jRadioButton1);
+        buttonGroup.add(jRadioButton2);
 
-        // Поле с видимостью в 20 символов
-        jpanel.add(new JTextField("default value",  20));
-        // JTextField jTextField = new JTextField();
-        // jTextField.getText();
+        // поумолчанию выбрано
+        jRadioButton2.setSelected(true);
+        // список
+        JComboBox<String> comboBox = new JComboBox();
+        comboBox.addItem("one");
+        comboBox.addItem("two");
+        comboBox.addItem("three");
+        // бордер 
+        Border border = BorderFactory.createEtchedBorder();
+        Border border1 = BorderFactory.createTitledBorder(border, "title");
+        jpanel.add(comboBox);
 
-        // Добавляем лейбл к полю
-        jpanel.add(new JLabel("this is label"));
+        jpanel.setBorder(border1);
 
-        // Поле для паролей видимостью в 20 символов
-        jpanel.add(new JPasswordField(20));
 
-        // Текстовое поле
-        JTextArea JTextArea = new JTextArea(5, 20);
-        // Отменяем расширение в ширину
-        JTextArea.setLineWrap(true);
-
-        // Добавляем cкролл для текстового поля
-        JScrollPane jScrollPane = new JScrollPane(JTextArea);
-        jpanel.add(jScrollPane);
-
-        // Поддерживает отложенный автоматический макет
-        jpanel.revalidate();
     }
 
 
