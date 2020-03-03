@@ -9,32 +9,16 @@ public class Main {
 
     public static void main(String[] args) {
         jframe.add(jpanel);
-        // чекбокс
-        jpanel.add(new JCheckBox("check box label"));
-        // радиокнопки
-        JRadioButton jRadioButton1 = new JRadioButton("one");
-        JRadioButton jRadioButton2 = new JRadioButton("two");
-        jpanel.add(jRadioButton1);
-        jpanel.add(jRadioButton2);
-        // группируем радиокнопки
-        ButtonGroup buttonGroup = new ButtonGroup();
-        buttonGroup.add(jRadioButton1);
-        buttonGroup.add(jRadioButton2);
 
-        // поумолчанию выбрано
-        jRadioButton2.setSelected(true);
-        // список
-        JComboBox<String> comboBox = new JComboBox();
-        comboBox.addItem("one");
-        comboBox.addItem("two");
-        comboBox.addItem("three");
-        // бордер 
-        Border border = BorderFactory.createEtchedBorder();
-        Border border1 = BorderFactory.createTitledBorder(border, "title");
-        jpanel.add(comboBox);
-
-        jpanel.setBorder(border1);
-
+        JSlider jSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 20);
+        jpanel.add(jSlider);
+        jSlider.setMinorTickSpacing(10);
+        jSlider.setMajorTickSpacing(20);
+        jSlider.setPaintTicks(true);
+        // привязка
+        jSlider.setSnapToTicks(true);
+        // лейблы
+        jSlider.setPaintLabels(true);
 
     }
 
