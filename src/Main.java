@@ -9,17 +9,10 @@ public class Main {
 
     public static void main(String[] args) {
         jframe.add(jpanel);
-
-        JSlider jSlider = new JSlider(JSlider.HORIZONTAL, 0, 100, 20);
-        jpanel.add(jSlider);
-        jSlider.setMinorTickSpacing(10);
-        jSlider.setMajorTickSpacing(20);
-        jSlider.setPaintTicks(true);
-        // привязка
-        jSlider.setSnapToTicks(true);
-        // лейблы
-        jSlider.setPaintLabels(true);
-
+        JPopupMenu  jPopupMenu = new JPopupMenu();
+        jPopupMenu.add(new JMenuItem("one"));
+        jPopupMenu.add(new JMenuItem("two"));
+        jpanel.setComponentPopupMenu(jPopupMenu);
     }
 
 
