@@ -1,6 +1,6 @@
 import javax.swing.*;
-import javax.swing.border.Border;
 
+/* Для создания layout правой кнопкой мыши - контестное меню new -> Swing GUI -> UIForm */
 
 public class Main {
 
@@ -9,13 +9,6 @@ public class Main {
 
     public static void main(String[] args) {
         jframe.add(jpanel);
-        JToolBar jToolBar = new JToolBar("title");
-        JButton one = new JButton("first");
-        jToolBar.add(one);
-        jToolBar.add(new JButton("two"));
-        jToolBar.addSeparator();
-        jToolBar.add(new JButton("three"));
-        jpanel.add(jToolBar);
     }
 
 
