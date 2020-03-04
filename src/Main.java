@@ -11,24 +11,22 @@ public class Main {
 
     public static void main(String[] args) {
         jframe.add(jpanel);
-        JButton jButton = new JButton("show dialog");
+        JButton jButton = new JButton("Show Modal");
         jpanel.add(jButton);
         jButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                MyDialog myDialog = new MyDialog();
-                myDialog.setVisible(true);
+                new MyModal().setVisible(true);
             }
         });
-
     }
-    
-    static class MyDialog extends JDialog {
-        public MyDialog() {
-            super(jframe, "Title", true);
+
+    static class MyModal extends JDialog {
+        public MyModal() {
+            super(jframe, "title", true);
             add(new JTextField(), BorderLayout.NORTH);
-            add(new JButton("button"), BorderLayout.SOUTH);
-            setBounds(500, 500, 250, 150);
+            add(new JButton("Кнопка"), BorderLayout.SOUTH);
+            setBounds(0, 0, 500,300);
         }
     }
 
