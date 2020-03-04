@@ -9,11 +9,11 @@ public class Main {
 
     public static void main(String[] args) {
         jframe.add(jpanel);
-        jpanel.setLayout(null);
-
-        JButton jButton = new JButton("submit");
-        jButton.setBounds(50,50, 150, 40)
-        jpanel.add(jButton);
+        jpanel.add(new JButton("One"));
+        // у данного элемента фокуса не будет
+        jpanel.add(new JButton("Two")).setFocusable(false);
+        // в самом начале фокус будет на 3тьем элементе
+        jpanel.add(new JButton("Three")).requestFocusInWindow();
     }
 
 
