@@ -9,10 +9,13 @@ public class Main {
 
     public static void main(String[] args) {
         jframe.add(jpanel);
-        JPopupMenu  jPopupMenu = new JPopupMenu();
-        jPopupMenu.add(new JMenuItem("one"));
-        jPopupMenu.add(new JMenuItem("two"));
-        jpanel.setComponentPopupMenu(jPopupMenu);
+        JToolBar jToolBar = new JToolBar("title");
+        JButton one = new JButton("first");
+        jToolBar.add(one);
+        jToolBar.add(new JButton("two"));
+        jToolBar.addSeparator();
+        jToolBar.add(new JButton("three"));
+        jpanel.add(jToolBar);
     }
 
 
