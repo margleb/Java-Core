@@ -1,9 +1,6 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.geom.*;
-import java.io.File;
-import java.io.IOException;
+import java.awt.geom.Ellipse2D;
 
 public class Main {
 
@@ -13,25 +10,23 @@ public class Main {
     public static void main(String[] args) {
         jframe.add(jpanel);
         jframe.add(new MyComponent());
-        jframe.revalidate();
     }
-
     static class MyComponent extends JComponent {
         @Override
         public void paint(Graphics g) {
-            Graphics2D g2D = (Graphics2D) g;
+            Graphics2D gr2d = (Graphics2D) g;
 
-            Rectangle2D rectangle2D = new Rectangle2D.Double(0, 0, 100, 100);
-            // увеличение в 2 раза
-            g2D.scale(2, 2);
-            // передвинуть
-            // g2D.translate(50, 50);
-            // трансформация
-            // g2D.shear(0.1, 0.1);
-            // вращение (поворот в радианах)
-            // g2D.rotate(45);
+            // более высокое качество проприросвки
+            gr2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            Ellipse2D ellipse2D = new Ellipse2D.Double(50, 50, 100, 100);
+            gr2d.draw(ellipse2D);
 
-            g2D.draw(rectangle2D);
+            // более низское качество прорисовки
+            RenderingHints renderingHints1 = new RenderingHints(null);
+            renderingHints1.put(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
+            gr2d.setRenderingHints(renderingHints1);
+            Ellipse2D ellipse2D1 = new Ellipse2D.Double(150, 50, 100,100);
+            gr2d.draw(ellipse2D1);
 
         }
     }
@@ -46,4 +41,5 @@ public class Main {
         jframe.setTitle("Example");
         return jframe;
     }
+
 }
