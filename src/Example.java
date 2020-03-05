@@ -18,14 +18,11 @@ public class Example {
         public void paint(Graphics g) {
            Graphics2D g2D = (Graphics2D) g;
 
-           Area area  = new Area(new Rectangle2D.Double(0,0,100,100));
+           // жирность линии + закругленный наконечник + тире
+           g2D.setStroke(new BasicStroke(10f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_MITER, 10f, new float[]{5, 10}, 0));
 
-           // area.add(new Area(new Ellipse2D.Double(50, 50, 150, 150)));
-           // area.subtract(new Area(new Ellipse2D.Double(50, 50, 150, 150)));
-           // area.intersect(new Area(new Ellipse2D.Double(50, 50, 150, 150)));
-           area.exclusiveOr(new Area(new Ellipse2D.Double(50, 50, 150, 150)));
-           
-           g2D.fill(area);
+           Line2D line = new Line2D.Double(0, 0, 100, 200);
+           g2D.draw(line);
 
         }
     }
