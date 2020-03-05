@@ -21,18 +21,17 @@ public class Main {
         public void paint(Graphics g) {
             Graphics2D g2D = (Graphics2D) g;
 
-            // g2D.setPaint(Color.red);
-            // g2D.setPaint(new GradientPaint(new Point(0, 0), Color.red, new Point(200, 100), Color.yellow));
+            Rectangle2D rectangle2D = new Rectangle2D.Double(0, 0, 100, 100);
+            // увеличение в 2 раза
+            g2D.scale(2, 2);
+            // передвинуть
+            // g2D.translate(50, 50);
+            // трансформация
+            // g2D.shear(0.1, 0.1);
+            // вращение (поворот в радианах)
+            // g2D.rotate(45);
 
-            try {
-                g2D.setPaint(new TexturePaint(ImageIO.read(new File("img/java.png")), new Rectangle2D.Double(0, 0, 200, 100)));
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-
-            Ellipse2D ellipse2D = new Ellipse2D.Double(0, 0, 200,100);
-
-            g2D.fill(ellipse2D);
+            g2D.draw(rectangle2D);
 
         }
     }
