@@ -18,14 +18,24 @@ public class Example {
         @Override
         public void paint(Graphics g) {
             Graphics2D gr2d = (Graphics2D) g;
-
-            Rectangle2D rectangle2D = new Rectangle2D.Double(0,0, 100, 100);
-            Ellipse2D ellipse2D = new Ellipse2D.Double(0, 0, 100, 100);
-            
-            // обрезка
-            gr2d.clip(ellipse2D);
-
+            Rectangle2D rectangle2D = new Rectangle2D.Double(50, 50, 100, 100);
+            Color color =  new Color(0f, 0f, 0f);
+            gr2d.setColor(color);
             gr2d.fill(rectangle2D);
+
+            Rectangle2D rectangle2D2 = new Rectangle2D.Double(150, 50, 100, 100);
+            Color color2 =  new Color(0f, 0f, 0f, 0.5f);
+            gr2d.setColor(color2);
+            // установить композицию цветов
+            // gr2d.setComposite(AlphaComposite.SrcOver);
+            gr2d.fill(rectangle2D2);
+
+            Rectangle2D rectangle2D3 = new Rectangle2D.Double(250, 50, 100, 100);
+            Color color3 =  new Color(0f, 0f, 0f, 0.1f);
+            gr2d.setColor(color3);
+            gr2d.fill(rectangle2D3);
+
+
         }
     }
 
