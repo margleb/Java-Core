@@ -7,22 +7,24 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws InterruptedException, IOException, UnsupportedFlavorException {
-
-        //  #1 Копируем в буфер обмена
-        // создаем clipboard
+        // системный буфер обмена
         Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
-        // создаем рандомный текст
-        StringSelection stringSelection = new StringSelection("some text");
-        // заносим его в буфер обмена
-        clipboard.setContents(stringSelection, null);
-        // засыпаем на нескольк секунд
-        // Thread.sleep(100000);
+        // Cтроки передаваемые в буфер обмена
+        String text = "Cтрока №1";
+        // Оболочка строки для передачи в буфер обмена
+        StringSelection selection = new StringSelection(text);
+        // Передача данных с помочью метода setContents()
+        // Владелец буфера обмена не имеет значения (null)
+        clipboard.setContents(selection, null);
 
-        // #2 Копируем из буфера обмена
+        // Класс DataFlavor описывает разновидности данных, которы емогут быть размещены в буферео обмена
         DataFlavor flavor = DataFlavor.stringFlavor;
+        // Ecли строка доступна в буфере обмена
         if(clipboard.isDataFlavorAvailable(flavor)) {
-            System.out.println(clipboard.getData(flavor));
+            // Получить данные и вывести их
+            String getText = (String) clipboard.getData(flavor);
+            System.out.println(getText);
         }
 
     }
-};
+}
