@@ -1,20 +1,31 @@
-import javax.imageio.ImageIO;
-import java.awt.geom.AffineTransform;
-import java.awt.image.AffineTransformOp;
-import java.awt.image.BufferedImage;
-import java.awt.image.BufferedImageOp;
-import java.io.File;
+import java.awt.*;
+import java.awt.geom.Line2D;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws IOException {
-        File file = new File("img/java.jpg");
-        BufferedImage image = ImageIO.read(file);
-        BufferedImage imageFiltered = new BufferedImage(image.getWidth(), image.getHeight(), image.getType());
-        AffineTransform affintTransform = AffineTransform.getRotateInstance(45, image.getWidth() / 2, image.getWidth() / 2);
-        BufferedImageOp Op = new AffineTransformOp(affintTransform, AffineTransformOp.TYPE_BILINEAR);
-        Op.filter(image, imageFiltered);
-
-        ImageIO.write(imageFiltered, "png", new File("javaExample.jpg"));
+    public static void main(String[] args) throws IOException, PrinterException {
+        Printable printable = new Printable() {
+            @Override
+            public int print(Graphics graphics, PageFormat pageFormat, int pagetIndex) throws PrinterException {
+                if(pagetIndex == 0) {
+                    Graphics2D graphics2D = (Graphics2D) graphics;
+                    Line2D line2D = new Line2D.Double(0, 0, 100, 200);
+                    // для того, чтобы печатаемая линия не выходила за края
+                    graphics2D.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+                    graphics2D.draw(line2D);
+                    return PAGE_EXISTS;
+                }
+                return NO_SUCH_PAGE;
+            }
+        };
+        PrinterJob job = PrinterJob.getPrinterJob();
+        job.setPrintable(printable);
+        if(job.printDialog()) {
+            job.print();
+        }
     }
 }
