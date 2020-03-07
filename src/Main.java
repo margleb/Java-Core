@@ -1,31 +1,19 @@
-import java.awt.*;
-import java.awt.geom.Line2D;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
-import java.io.IOException;
+
+import javax.print.*;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 
 public class Main {
-    public static void main(String[] args) throws IOException, PrinterException {
-        Printable printable = new Printable() {
-            @Override
-            public int print(Graphics graphics, PageFormat pageFormat, int pagetIndex) throws PrinterException {
-                if(pagetIndex == 0) {
-                    Graphics2D graphics2D = (Graphics2D) graphics;
-                    Line2D line2D = new Line2D.Double(0, 0, 100, 200);
-                    // для того, чтобы печатаемая линия не выходила за края
-                    graphics2D.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
-                    graphics2D.draw(line2D);
-                    return PAGE_EXISTS;
-                }
-                return NO_SUCH_PAGE;
-            }
-        };
-        PrinterJob job = PrinterJob.getPrinterJob();
-        job.setPrintable(printable);
-        if(job.printDialog()) {
-            job.print();
-        }
+    public static void main(String[] args) throws FileNotFoundException, PrintException {
+       DocFlavor flavor = DocFlavor.INPUT_STREAM.JPEG;
+       PrintService[] services = PrintServiceLookup.lookupPrintServices(flavor, null);
+       InputStream inputStream = new FileInputStream("img/java.jpg");
+       Doc doc = new SimpleDoc(inputStream, flavor, null);
+       if(services.length > 0) {
+           DocPrintJob job = services[0].createPrintJob();
+           job.print(doc, null);
+       }
     }
 }
