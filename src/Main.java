@@ -1,19 +1,28 @@
-
-import javax.print.*;
-import java.io.*;
-
+import java.awt.*;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
 
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException, PrintException {
-        DocFlavor flavor = DocFlavor.SERVICE_FORMATTED.PAGEABLE;
-        String mineType = "application/postscript";
-        StreamPrintServiceFactory[] factories = StreamPrintServiceFactory.lookupStreamPrintServiceFactories(flavor, mineType);
-        OutputStream outputStream = new FileOutputStream("PostService.odd");
-        StreamPrintService streamPrintService = factories[0].getPrintService(outputStream);
+    public static void main(String[] args) throws InterruptedException, IOException, UnsupportedFlavorException {
 
-        InputStream inStream = new FileInputStream("img/java.jpg");
-        DocPrintJob job = streamPrintService.createPrintJob();
-        Doc doc = new SimpleDoc(inStream, DocFlavor.INPUT_STREAM.JPEG, null);
-        job.print(doc, null);
+        //  #1 Копируем в буфер обмена
+        // создаем clipboard
+        Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+        // создаем рандомный текст
+        StringSelection stringSelection = new StringSelection("some text");
+        // заносим его в буфер обмена
+        clipboard.setContents(stringSelection, null);
+        // засыпаем на нескольк секунд
+        // Thread.sleep(100000);
+
+        // #2 Копируем из буфера обмена
+        DataFlavor flavor = DataFlavor.stringFlavor;
+        if(clipboard.isDataFlavorAvailable(flavor)) {
+            System.out.println(clipboard.getData(flavor));
+        }
+
     }
-}
+};
