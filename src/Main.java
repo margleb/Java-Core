@@ -1,25 +1,34 @@
 import javax.swing.*;
 import java.awt.*;
-import java.io.File;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.net.URI;
 import java.net.URISyntaxException;
 
 public class Main {
-    public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException {
-        if(Desktop.isDesktopSupported()) {
-            Desktop desktop = Desktop.getDesktop();
-            for(Desktop.Action action : Desktop.Action.values()) {
-                System.out.println(action);
-            }
-            // если можно что либо открывать
-            if(desktop.isSupported(Desktop.Action.OPEN)) {
-                desktop.open(new File("img/flower.jpg"));
-            }
-            if(desktop.isSupported(Desktop.Action.BROWSE)) {
-                desktop.browse(new URI("https://www.google.com"));
+    public static void main(String[] args) throws InterruptedException, IOException, URISyntaxException, AWTException {
+            // Если поддерживается систесный трей
+            if(SystemTray.isSupported()) {
+                // Создаем трей
+                SystemTray tray = SystemTray.getSystemTray();
+                // Получаем изображение
+                Image image = new ImageIcon("img/jpg.png", "desc").getImage();
+
+                // Создаем попaп меню
+                PopupMenu popupMenu = new PopupMenu();
+                // добавляем 3 элемента, один из которых по событию клик вывыодит в консоль какое либо сообщение
+                popupMenu.add(new MenuItem("one")).addActionListener(new ActionListener() {
+                    @Override
+                    public void actionPerformed(ActionEvent e) {
+                        System.out.println("one");
+                    }
+                });
+                popupMenu.add(new MenuItem("two"));
+                popupMenu.add(new MenuItem("three"));
+
+                // Добавляем иконку в трей
+                tray.add(new TrayIcon(image, "tray description", popupMenu));
             }
         }
     }
-}
 
