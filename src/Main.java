@@ -1,39 +1,25 @@
-/* У нас есть логгеры, у которых могут быть несколько уровней, хендлеры, можем вывыодит в консоль, файл и т.д., использовать фильтры  */
-
-import java.io.IOException;
-import java.util.logging.*;
+import javax.swing.*;
+import java.io.FileNotFoundException;
 
 public class Main {
-    // лог с указанием имени класса
-    private static final Logger logger = Logger.getLogger(Main.class.getName());
-
-    public static void main(String[] args) throws IOException {
-        // можно добавлять хендлеры (обработчики я так понял)
-        // для сохранения
-        Handler consoleHandler = new ConsoleHandler();
-        // cохранение в файл с указанием паттерна
-        // Handler fileHandler = new FileHandler("%h/myJavaLog.log");
-        // это фильтр
-        consoleHandler.setFilter(new MyFilter());
-        // а это форматирование
-        consoleHandler.setFormatter(new MyFormatter());
-        logger.addHandler(consoleHandler);
-        logger.setUseParentHandlers(false);
-        logger.info("info");
-        logger.info("info max");
+    public static void main(String[] args) throws FileNotFoundException {
+        JFrame jframe = getFrame();
+        JPanel jPanel = new JPanel();
+        jframe.add(jPanel);
+        JButton button = new JButton("submit");
+        // логирование кнопки
+        // button.setDebugGraphicsOptions(DebugGraphics.LOG_OPTION);
+        // медленная прорисовка
+        // RepaintManager.currentManager(jframe.getRootPane()).setDoubleBufferingEnabled(true);
+        // ((JComponent)jframe.getContentPane()).setDebugGraphicsOptions(DebugGraphics.FLASH_OPTION);
+        jPanel.add(button);
     }
 
-    static class MyFilter implements Filter {
-        @Override
-        public boolean isLoggable(LogRecord record) {
-            return record.getMessage().endsWith("max");
-        }
-    }
-
-    static class MyFormatter extends Formatter {
-        @Override
-        public String format(LogRecord record) {
-            return record.getLevel() + ": " + record.getMessage();
-        }
+    private static JFrame getFrame() {
+        JFrame jframe = new JFrame() {};
+        jframe.setVisible(true);
+        jframe.setBounds(750, 250, 500, 500);
+        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        return jframe;
     }
 }
