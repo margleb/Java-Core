@@ -1,59 +1,52 @@
-import javax.swing.*;
-import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.InputEvent;
-import java.awt.event.KeyEvent;
-import java.awt.image.BufferedImage;
-import java.io.FileNotFoundException;
-
 public class Main {
-    public static void main(String[] args) throws FileNotFoundException {
-      JFrame jframe = getFrame();
-      JPanel jpanel = new JPanel();
-      jframe.add(jpanel);
-      JButton button = new JButton("submit");
-      button.addActionListener(new ActionListener() {
-          @Override
-          public void actionPerformed(ActionEvent e) {
-              jframe.setTitle(jframe.getTitle() + "1");
-          }
-      });
-      jpanel.add(button);
-      JButton jbutton2 = new JButton("click submit");
-        jpanel.add(jbutton2);
-        jbutton2.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                GraphicsEnvironment environment = GraphicsEnvironment.getLocalGraphicsEnvironment();
-                GraphicsDevice device = environment.getDefaultScreenDevice();
-                try {
-                    // перемещение мыши и нажатие
-                    Robot robot = new Robot(device);
-                    robot.mouseMove(750 + 200, 250 + 50);
-                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-                    robot.mousePress(InputEvent.BUTTON1_DOWN_MASK);
-                    // фокус кнопки
-                    robot.keyPress(KeyEvent.VK_TAB);
-                    robot.keyRelease(KeyEvent.VK_TAB);
+    public static void main(String[] args) {
+        Book x = new Book("one");
+        Book y = new Book("one");
+        Book z = new Book("one");
 
-                    // printscreen
-                    // Rectangle rectangle = new Rectangle(0,0,1000,1000);
-                    // BufferedImage image = robot.createScreenCapture(rectangle);
+        // Рефлексия
+        System.out.println("reflexive");
+        System.out.println(x.equals(x)); // всегда true
+        System.out.println("");
 
-                } catch (AWTException el) {
-                    el.printStackTrace();
-                }
-            }
-        });
-        jpanel.revalidate();
+        // Симетрия
+        System.out.println("symmetric");
+        System.out.println(x.equals(y));
+        System.out.println(y.equals(x));
+        System.out.println("");
+
+        // Транзитивность
+        System.out.println("transitive");
+        System.out.println(x.equals(y));
+        System.out.println(y.equals(z));
+        System.out.println(x.equals(z));
+        System.out.println("");
+
+        // Постояннство
+        System.out.println("consistent");
+        System.out.println(x.equals(y));
+        System.out.println(x.equals(y));
+        System.out.println(x.equals(y));
+        System.out.println(x.equals(y));
+        System.out.println("");
+
+        // Не нулевое
+        System.out.println("not null");
+        System.out.println(x.equals(null)); // всегда false
+
     }
+}
 
-    private static JFrame getFrame() {
-        JFrame jframe = new JFrame() {};
-        jframe.setVisible(true);
-        jframe.setBounds(750, 250, 500, 500);
-        jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        return jframe;
+class Book {
+    String title;
+    public Book(String title) {
+        this.title = title;
+    }
+    @Override
+    public boolean equals(Object obj) {
+        if(obj instanceof Book) {
+            return obj != null && this.title.equals(((Book)obj).title);
+        }
+        return false;
     }
 }
