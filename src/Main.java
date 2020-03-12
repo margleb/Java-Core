@@ -1,52 +1,58 @@
-import org.xml.sax.Attributes;
-import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import org.w3c.dom.DOMImplementation;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+import org.w3c.dom.ls.DOMImplementationLS;
+import org.w3c.dom.ls.LSOutput;
+import org.w3c.dom.ls.LSSerializer;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.parsers.SAXParser;
-import javax.xml.parsers.SAXParserFactory;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
+import javax.xml.transform.*;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 import java.io.File;
-import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 
 public class Main {
-    public static void main(String[] args) throws ParserConfigurationException, SAXException, IOException, XMLStreamException {
+    public static void main(String[] args) throws ParserConfigurationException, TransformerException, IOException {
 
-        DefaultHandler handler = new DefaultHandler() {
-            @Override
-            public void startElement(String uri, String localName, String qName, Attributes attributes) throws SAXException {
-                String name = attributes.getValue("name");
-                if(name != null && !name.isEmpty()) {
-                    System.out.println(name);
-                }
-            }
-            @Override
-            public void characters (char ch[], int start, int length) {
-                String str = "";
-                for(int i = 0; i < length; i++) {
-                    str += ch[start + i];
-                }
-                System.out.println(str);
-            }
-        };
+        // cоздаем документ
+        DocumentBuilderFactory  factory = DocumentBuilderFactory.newInstance();
+        DocumentBuilder builder = factory.newDocumentBuilder();
+        Document document = builder.newDocument();
+        Element root =  document.createElement("root");
+        Element font = document.createElement("font");
+        Text text = document.createTextNode("TimesNewRoman");
+        document.appendChild(root);
+        root.appendChild(font);
+        font.appendChild(text);
+        font.setAttribute("size", "20");
 
-        SAXParserFactory factory = SAXParserFactory.newInstance();
-        SAXParser parser = factory.newSAXParser();
-        parser.parse(new File(".idea/misc.xml"), handler);
+        // сохраняем
+        Transformer t = TransformerFactory.newInstance().newTransformer();
+        t.setOutputProperty(OutputKeys.INDENT, "yes");
+        t.transform(new DOMSource(document), new StreamResult(new FileOutputStream("temp.xml")));
 
+        DOMImplementation impl = document.getImplementation();
+        DOMImplementationLS implLS = (DOMImplementationLS)impl.getFeature("LS", "3.0");
+        LSSerializer ser = implLS.createLSSerializer();
+        ser.getDomConfig().setParameter("format-pretty-print", true);
+        // сохрание в строчку
+        String str = ser.writeToString(document);
+        System.out.println(str);
 
-        // Новый Sax подход
-        XMLInputFactory factory2 = XMLInputFactory.newInstance();
-        XMLStreamReader parser2 = factory2.createXMLStreamReader(new FileInputStream(".idea/misc.xml"));
-        while(parser2.hasNext()) {
-            int event = parser2.next();
-            if(event == XMLStreamConstants.START_ELEMENT) {
-                System.out.println(parser2.getLocalName());
-            }
-        }
+        // cохраняем в файл
+        LSOutput out = implLS.createLSOutput();
+        out.setEncoding("UTF-8");
+        out.setByteStream(Files.newOutputStream(Paths.get("temp.xml")));
+        ser.write(document, out);
 
     }
 }
