@@ -1,30 +1,22 @@
-import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
-import java.io.File;
+/*
+Сокет — это абстрактное понятие, обозначающее возможность для программ устанавливать соединения для обмена данными по сети.
+
+*/
+
 import java.io.IOException;
+import java.net.InetSocketAddress;
+import java.net.Socket;
+import java.util.Scanner;
 
 public class Main {
-    public static void main(String[] args) throws IOException, XMLStreamException, ParserConfigurationException, SAXException, XPathExpressionException {
-        DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
-        DocumentBuilder builder = factory.newDocumentBuilder();
-        Document document = builder.parse(new File(".idea/modules.xml"));
-
-        // обьект типа XPath для вычеслениея элементов
-        XPathFactory xPathFactory = XPathFactory.newInstance();
-        XPath xpath = xPathFactory.newXPath();
-        // /gridbag/row[1]/cell[1] @Sanchor
-        // /gridbag/row[1]
-        // count(/project/component/output)
-        // System.out.println(xpath.evaluate("/project/component/output", document));
-        // NodeList list = xpath.evaluate("/project/component/output", document, XPathConstants.NODESET);
+    public static void main(String[] args) throws IOException {
+        try(Socket socket = new Socket()) {
+            // cоединяем и получаем ответ
+            socket.connect(new InetSocketAddress("time-A.timefreq.bldrdoc.gov", 13), 200);
+            Scanner scanner = new Scanner(socket.getInputStream());
+            while(scanner.hasNextLine()) {
+                System.out.println(scanner.nextLine());
+            }
+        }
     }
 }
